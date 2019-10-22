@@ -7,12 +7,17 @@ const mongoose     = require('mongoose')
 const passport     = require('passport')
 const createError  = require('http-errors');
 const cookieParser = require('cookie-parser');
+const methodOverride = require('method-override')
 const expressValidator = require('express-validator');
 
 let MongoStore = require('connect-mongo')(session)
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users/users');
+const indexRouter    = require('./routes');
+const usersRouter    = require('./routes/users/users');
+const adminRouter    = require('./routes/admin/admin');
+const productsRouter = require('./routes/products/products');
+
+const Category = require('./routes/products/models/Category')
 
 require('dotenv').config()
 
@@ -33,6 +38,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'))
 
 app.use(session({
     resave: true,
@@ -84,8 +90,22 @@ app.use((req, res, next) => {
     next()
 })
 
+app.use((req, res, next) => {
+    Category.find({})
+            .then(categories => {
+                console.log(`res.locals.categories: `);
+                
+                res.locals.categories = categories
+
+                next()
+            })
+            .catch(error => next(error))
+})
+
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/products', productsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

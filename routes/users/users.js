@@ -4,6 +4,7 @@ const router  = express.Router();
 
 const userController   = require('./controllers/userController')
 const signupValidation = require('./utils/signupValidation')
+const User = require("./models/User")
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -30,6 +31,18 @@ router.post('/signin', passport.authenticate('local-login', {
     failureFlash:    true
 }))
 
+router.post('/edit-profile', (req, res) => {
+    //body deals with forms
+   req.user.profile.name = req.body.name
+
+   req.user.save((err, user) => {
+       if(user){
+           console.log('user ', user)
+
+           res.redirect('/api/users/edit-profile')
+       }
+   })
+})
 router.get('/edit-profile', function (req, res) {
     if (!req.isAuthenticated()) res.redirect('/api/users/signin')
 
