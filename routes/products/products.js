@@ -34,4 +34,14 @@ router.get('/getproductsbycategoryid/:id', (req, res) => {
         })
 })
 
+router.get('/deleteproductbyid', (req, res) => {
+    productController.deleteProductById(req.params.id)
+        .then(products => {
+            res.render('products/deleteproductbyid', { products: products })
+        })
+        .catch(err => {
+            res.status(err.status).json(err)
+        })
+})
+
 module.exports = router

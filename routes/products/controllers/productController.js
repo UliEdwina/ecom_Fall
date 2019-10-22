@@ -50,4 +50,26 @@ module.exports = {
                     })
         })
     }
+    ,
+    deleteProductById: (id) => {
+        return new Promise((resolve, reject) => {
+            Product.deleteOne({product: id})
+                .populate('product')
+                .exec()
+                .then(products => {
+                    resolve(products)
+                })
+                .catch(err => {
+                    let errors ={}
+                    errors.status = 500
+                    errors.message = err
+
+                    reject(errors)
+                    
+                })
+
+
+        })
+
+    }
 }
