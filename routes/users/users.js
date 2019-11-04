@@ -6,6 +6,8 @@ const userController   = require('./controllers/userController')
 const signupValidation = require('./utils/signupValidation')
 const User = require("./models/User")
 
+const cartController = require('../cart/controllers/cartController')
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
@@ -17,7 +19,7 @@ router.get('/signup', (req, res) => {
     res.render('auth/signup', { error_msg: null })
 })
 
-router.post('/signup', signupValidation, userController.signup)
+router.post('/signup', signupValidation, userController.signup, cartController.createUserCart)
 
 router.get('/signin', (req, res) => {
     if (req.isAuthenticated()) res.redirect('/')
@@ -68,6 +70,11 @@ router.get('/logout', (req, res) => {
     req.logOut()
 
     res.redirect('/')
+})
+
+router.get('/cart', (req, res) => {
+        let cart = {}
+        
 })
 
 module.exports = router;

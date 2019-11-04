@@ -28,7 +28,7 @@
    
     </div>
 
-    <form class='form-inline my-2 my-lg-0' action="/api/product/search" method="POST">
+    <form class='form-inline my-2 my-lg-0' action="/api/products/search" method="GET">
         <input type="text" class="form-control mr-ms-2" placeholder="Search" aria-label="Search" name="q">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
@@ -47,10 +47,20 @@
             <li class="nav-item">
                     <a href="/api/users/edit-profile" class="nav-link">Logged in as <span style="color: orange"><%= user.email %></span></a>
             </li> 
+
+            <li class="nav-item">
+                <a href="/api/cart">
+                    <span class="fa-stack has-badge" data-count=<%= cartTotal %> >
+                        <i class="fas fa-cart-plus"></i>
+                    </span>
+                </a>
+            </li>
+
             <li class="nav-item">
                     <a href="/api/users/logout" class="nav-link">Logout</a>
             </li> 
         <% } %>
+
         </ul>
     </div>
 </nav>

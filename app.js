@@ -13,11 +13,14 @@ const expressValidator = require('express-validator');
 let MongoStore = require('connect-mongo')(session)
 
 const indexRouter    = require('./routes');
+const cartRouter     = require('./routes/cart/cart');
 const usersRouter    = require('./routes/users/users');
 const adminRouter    = require('./routes/admin/admin');
 const productsRouter = require('./routes/products/products');
 
 const Category = require('./routes/products/models/Category')
+
+const cartMiddleware = require('./routes/cart/utils/cartMiddleware')
 
 require('dotenv').config()
 
@@ -45,7 +48,8 @@ app.use(session({
     saveUninitialized: true,
     secret: process.env.SESSION_SECRET,
     store: new MongoStore({
-        url: process.env.MONGODB_URI,
+        // url: process.env.MONGODB_URI,
+        mongooseConnection: mongoose.connection,
         autoReconnect: true
     }),
     cookie: {
@@ -93,8 +97,6 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     Category.find({})
             .then(categories => {
-                console.log(`res.locals.categories: `);
-                
                 res.locals.categories = categories
 
                 next()
@@ -102,7 +104,10 @@ app.use((req, res, next) => {
             .catch(error => next(error))
 })
 
+app.use(cartMiddleware)
+
 app.use('/', indexRouter);
+app.use('/api/cart', cartRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/products', productsRouter);

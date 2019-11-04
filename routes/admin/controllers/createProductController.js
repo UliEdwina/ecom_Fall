@@ -20,5 +20,19 @@ module.exports = {
         req.flash('success', `Fake ${req.params.categoryName} 10 products created!`)
 
         res.redirect('/api/admin/get-all-categories')
-        }
+        },
+    editProductById: (params, id) => {
+        return new Promise((resolve, reject) =>
+        {
+            Product.findById(id)
+                .then( product => {
+                    if(params._id != '')
+                    category.product._id =
+                    params._id
+                    
+                })
+        })
+
+
+    }
 }
